@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>MVP Doações</title>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h2 { margin-top: 30px; }
+    input, button { margin: 5px; padding: 8px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 15px; }
+    th, td { border: 1px solid #ddd; padding: 8px; }
+    th { background: #f2f2f2; }
+    .hidden { display: none; }
+    .section { border: 1px solid #ddd; padding: 15px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>💰 MVP Doações - Supabase</h1>
+
+  <!-- Login / Signup -->
+  <div id="auth-section" class="section">
+    <h2>Login / Cadastro</h2>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Senha">
+    <button onclick="signUp()">Cadastrar</button>
+    <button onclick="signIn()">Entrar</button>
+    <button onclick="signOut()">Sair</button>
+  </div>
+
+  <!-- Doadores -->
+  <div id="doador-section" class="section hidden">
+    <h2>Doadores</h2>
+    <input type="text" id="doadorNome" placeholder="Nome">
+    <input type="text" id="doadorTelefone" placeholder="Telefone">
+    <input type="text" id="doadorCpf" placeholder="CPF/CNPJ">
+    <input type="text" id="doadorEndereco" placeholder="Endereço">
+    <button onclick="addDoador()">Adicionar</button>
+    <table id="doadorTable">
+      <thead>
+        <tr><th>ID</th><th>Nome</th><th>Email</th><th>Telefone</th><th>Ações</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- Doações -->
+  <div id="doacao-section" class="section hidden">
+    <h2>Doações</h2>
+    <input type="number" id="doacaoValor" placeholder="Valor">
+    <input type="date" id="doacaoData">
+    <input type="text" id="doacaoForma" placeholder="Forma de Pagamento">
+    <button onclick="addDoacao()">Adicionar</button>
+    <table id="doacaoTable">
+      <thead>
+        <tr><th>ID</th><th>Doador</th><th>Valor</th><th>Data</th><th>Status</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- Interações -->
+  <div id="interacao-section" class="section hidden">
+    <h2>Interações</h2>
+    <input type="text" id="tipoInteracao" placeholder="Tipo">
+    <input type="text" id="observacoes" placeholder="Observações">
+    <button onclick="addInteracaoNova()">Adicionar</button>
+    <table id="interacaoTable">
+      <thead>
+        <tr><th>ID</th><th>Doador ID</th><th>Tipo</th><th>Obs</th><th>Data</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+<script>
+  // 🔑 Config Supabase
+  const SUPABASE_URL = "https://iqtxmepahwyqngibdabt.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlxdHhtZXBhaHd5cW5naWJkYWJ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg3MzQ2NTcsImV4cCI6MjA3NDMxMDY1N30.fokYHtnx0ulKhrX6HBRp-eQRwgerjqIGcxe6kaEGjAo";
+  const { createClient } = supabase;
+  const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+
+  let currentUser = null;
+  let currentDoadorId = null;
+  let isAdmin = false;
+
+// =========================
+  // 🔐 AUTH
+  // =========================
+  async function signIn() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+    if (error) return alert("Erro: " + error.message);
+
+    currentUser = data.user;
+
+    // Checa se o usuário é admin
+    const { data: doadorData } = await supabaseClient
+      .from("doador")
+      .select("nivel_acesso")
+      .eq("id_usuario", currentUser.id)
+      .single();
+
+    isAdmin = doadorData && doadorData.nivel_acesso === 99;
+
+    alert("Login OK! Admin: " + isAdmin);
+    loadData();
+    toggleSections(true);
+  }
+
+  async function signOut() {
+    await supabaseClient.auth.signOut();
+    currentUser = null;
+    toggleSections(false);
+    alert("Saiu!");
+  }
+
+  function toggleSections(show) {
+    document.getElementById("doador-section").classList.toggle("hidden", !show);
+    document.getElementById("doacao-section").classList.toggle("hidden", !show);
+    document.getElementById("interacao-section").classList.toggle("hidden", !show);
+  }
+
+  // =========================
+// 🧑 DOADOR NOVO
+// =========================
+async function loadDoadores() {
+  const { data, error } = await supabaseClient.from("doador_novo").select("*");
+  if (error) return console.error(error);
+
+  const tbody = document.querySelector("#doadorTable tbody");
+  tbody.innerHTML = "";
+  data.forEach(d => {
+    tbody.innerHTML += `<tr>
+      <td>${d.id_doador}</td>
+      <td>${d.nome}</td>
+      <td>${d.email || ""}</td>
+      <td>${d.telefone || ""}</td>
+      <td>
+        <button onclick="updateDoador(${d.id_doador})">Editar</button>
+        <button onclick="deleteDoador(${d.id_doador})">Deletar</button>
+      </td>
+    </tr>`;
+  });
+}
+
+async function addDoador() {
+  const nome = document.getElementById("doadorNome").value;
+  const telefone = document.getElementById("doadorTelefone").value;
+  const cpf = document.getElementById("doadorCpf").value;
+  const endereco = document.getElementById("doadorEndereco").value;
+  const email = ""; // opcional
+
+  const { error } = await supabaseClient.from("doador_novo").insert({ nome, telefone, cpf_cnpj: cpf, endereco, email });
+  if (error) return alert("Erro: " + error.message);
+  loadDoadores();
+}
+
+async function updateDoador(id) {
+  const nome = prompt("Novo nome do doador:");
+  const telefone = prompt("Novo telefone:");
+  const cpf = prompt("Novo CPF/CNPJ:");
+  const endereco = prompt("Novo endereço:");
+  const email = prompt("Novo email (opcional):");
+
+  const updateData = {};
+  if (nome) updateData.nome = nome;
+  if (telefone) updateData.telefone = telefone;
+  if (cpf) updateData.cpf_cnpj = cpf;
+  if (endereco) updateData.endereco = endereco;
+  if (email) updateData.email = email;
+
+  const { error } = await supabaseClient.from("doador_novo").update(updateData).eq("id_doador", id);
+  if (error) return alert("Erro: " + error.message);
+  loadDoadores();
+}
+
+
+async function deleteDoador(id) {
+  if (!confirm("Tem certeza que deseja deletar este doador?")) return;
+  const { error } = await supabaseClient.from("doador_novo").delete().eq("id_doador", id);
+  if (error) return alert("Erro: " + error.message);
+  loadDoadores();
+}
+
+// =========================
+// 💸 DOAÇÃO NOVA
+// =========================
+async function loadDoacoes() {
+  const { data, error } = await supabaseClient.from("doacao_nova").select("*");
+  if (error) return console.error(error);
+
+  const tbody = document.querySelector("#doacaoTable tbody");
+  tbody.innerHTML = "";
+  data.forEach(d => {
+    tbody.innerHTML += `<tr>
+      <td>${d.id_doacao}</td>
+      <td>${d.id_doador}</td>
+      <td>${d.valor}</td>
+      <td>${d.data_doacao || ""}</td>
+      <td>${d.status || ""}</td>
+      <td>
+        <button onclick="updateDoacao(${d.id_doacao})">Editar</button>
+        <button onclick="deleteDoacao(${d.id_doacao})">Deletar</button>
+      </td>
+    </tr>`;
+  });
+}
+
+async function addDoacao() {
+  const valor = document.getElementById("doacaoValor").value;
+  const dataDoacao = document.getElementById("doacaoData").value;
+  const forma = document.getElementById("doacaoForma").value;
+  const idDoador = prompt("ID do doador:");
+
+  const { error } = await supabaseClient.from("doacao_nova").insert({
+    id_doador: parseInt(idDoador),
+    valor: parseFloat(valor),
+    data_doacao: dataDoacao,
+    forma_pagamento: forma
+  });
+  if (error) return alert("Erro: " + error.message);
+  loadDoacoes();
+}
+
+async function updateDoacao(id) {
+  const valor = prompt("Novo valor:");
+  const forma = prompt("Nova forma de pagamento:");
+  const status = prompt("Novo status:");
+
+  const updateData = {};
+  if (valor) updateData.valor = parseFloat(valor);
+  if (forma) updateData.forma_pagamento = forma;
+  if (status) updateData.status = status;
+
+  const { error } = await supabaseClient.from("doacao_nova").update(updateData).eq("id_doacao", id);
+  if (error) return alert("Erro: " + error.message);
+  loadDoacoes();
+}
+
+async function deleteDoacao(id) {
+  if (!confirm("Deseja deletar esta doação?")) return;
+  const { error } = await supabaseClient.from("doacao_nova").delete().eq("id_doacao", id);
+  if (error) return alert("Erro: " + error.message);
+  loadDoacoes();
+}
+
+
+  // =========================
+// 📞 INTERAÇÃO NOVA
+// =========================
+async function loadInteracoesNovas() {
+  let query = supabaseClient.from("interacao_nova").select("*");
+  if (!isAdmin) query = query.eq("id_doador", currentDoadorId);
+
+  const { data, error } = await query;
+  if (error) return console.error(error);
+
+  const tbody = document.querySelector("#interacaoTable tbody");
+  tbody.innerHTML = "";
+  data.forEach(i => {
+    tbody.innerHTML += `<tr>
+      <td>${i.id_interacao}</td>
+      <td>${i.id_doador || ""}</td>
+      <td>${i.tipo_interacao}</td>
+      <td>${i.observacoes || ""}</td>
+      <td>${i.data_interacao}</td>
+      <td>
+        <button onclick="updateInteracaoNova(${i.id_interacao})">Editar</button>
+        ${isAdmin ? `<button onclick="deleteInteracaoNova(${i.id_interacao})">Deletar</button>` : ""}
+      </td>
+    </tr>`;
+  });
+}
+
+async function addInteracaoNova() {
+  const tipo = document.getElementById("tipoInteracao").value;
+  const obs = document.getElementById("observacoes").value;
+  if (!currentDoadorId && !isAdmin) return alert("Selecione um doador!");
+  const idDoador = isAdmin ? currentDoadorId || 0 : currentDoadorId;
+
+  const { error } = await supabaseClient.from("interacao_nova").insert({
+    id_doador: idDoador,
+    id_usuario: currentUser.id,
+    tipo_interacao: tipo,
+    observacoes: obs
+  });
+  if (error) return alert("Erro: " + error.message);
+  loadInteracoesNovas();
+}
+
+async function updateInteracaoNova(id) {
+  const tipo = prompt("Novo tipo:");
+  const obs = prompt("Nova observação:");
+  const { error } = await supabaseClient.from("interacao_nova")
+    .update({ tipo_interacao: tipo, observacoes: obs })
+    .eq("id_interacao", id);
+  if (error) return alert("Erro: " + error.message);
+  loadInteracoesNovas();
+}
+
+async function deleteInteracaoNova(id) {
+  if (!isAdmin) return alert("Somente admins podem deletar interações");
+  if (!confirm("Deseja deletar esta interação?")) return;
+
+  const { error } = await supabaseClient.from("interacao_nova")
+    .delete()
+    .eq("id_interacao", id);
+  if (error) return alert("Erro: " + error.message);
+  loadInteracoesNovas();
+}
+
+
+  // =========================
+  // 🚀 Load inicial
+  // =========================
+  async function loadData() {
+    await loadDoadores();
+    await loadDoacoes();
+    await loadInteracoes();
+  }
+</script>
+</body>
+</html>
