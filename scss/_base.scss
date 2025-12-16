@@ -1,0 +1,30 @@
+body {
+    font-family: $font-stack;
+    margin: 0;
+    padding: $padding;
+    background-color: #fafafa;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    color: $primary-color;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: $margin;
+
+    th {
+        background: $secondary-color;
+        color: #333;
+        padding: $padding;
+        text-align: left;
+    }
+
+    td {
+        padding: $padding;
+        border: 1px solid $border-color;
+    }
+}

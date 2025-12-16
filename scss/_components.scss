@@ -1,0 +1,45 @@
+// Seções
+.section {
+    border: 1px solid $border-color;
+    padding: $padding;
+    margin-top: $margin;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+
+    h2 {
+        margin-top: 0;
+        color: $primary-color;
+    }
+}
+
+// Botões
+button {
+    @include button($primary-color);
+
+    // &.secondary {
+    //     @include button($secondary-color);
+    //     color: #333;
+
+    //     &:hover {
+    //         background-color: lighten($secondary-color, 10%);
+    //     }
+    // }
+}
+
+button.secondary {
+    @include button($secondary-color);
+    color: #333;
+
+    &:hover {
+        background-color: #e6e6e6; // Uma cor fixa mais clara (defina manualmente no lugar de lighten)
+    }
+}
+
+// Inputs
+input {
+    padding: $padding;
+    border: 1px solid $border-color;
+    border-radius: 4px;
+    font-size: 1rem;
+}
