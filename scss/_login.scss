@@ -38,6 +38,10 @@
 .auth-section {
     width: 100%;
     box-sizing: border-box;
+
+    input {
+        margin: 0;
+    }
 }
 
 .form-group {
@@ -46,6 +50,22 @@
     input {
         width: 100%;
         box-sizing: border-box;
+    }
+}
+
+.password-block {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    input {
+        width: 100%;
+        padding-right: 40px;
+        box-sizing: border-box;
+    }
+
+    i {
+        color: gray;
     }
 }
 

@@ -36,10 +36,47 @@ button.secondary {
     }
 }
 
+button.btn-icon {
+    background: none;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+}
+
 // Inputs
 input {
-    padding: $padding;
+    // padding: $padding;
     border: 1px solid $border-color;
     border-radius: 4px;
     font-size: 1rem;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+    &:focus {
+        border-color: $primary-color;
+        box-shadow: 0 0 0 3px rgba($primary-color, 0.15);
+    }
+}
+
+// Modais do Bootstrap: zera a margem legada de "input, button" (definida no <style>
+// do index.html) para não conflitar com o espaçamento próprio dos componentes do Bootstrap
+.modal {
+    .form-control {
+        margin: 0;
+    }
+
+    .btn {
+        margin: 0;
+    }
 }

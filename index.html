@@ -4,6 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <title>MVP Doações</title>
+  <!-- Bootstrap 5 (componentes de Modal/Formulário) - carregado antes do style.css
+       para que nossos estilos customizados continuem tendo prioridade -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="./style.css">
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <link href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons/css/all/all.css" rel="stylesheet">
@@ -63,12 +66,18 @@
           <input type="email" id="email" placeholder="Email">
         </div>
         <div class="form-group">
-          <input type="password" id="password" placeholder="Senha">
+          <div class="password-block">
+            <input type="password" id="password" placeholder="Senha" oninput="toggleSenhaBtn()">
+            <button id="btn-toggle-senha" class="btn-icon" type="button" title="Ver ou ocultar senha" onclick="viewSenha()" disabled>
+              <i id="icon-password" class="fi fi-rr-eye-crossed"></i>
+            </button>
+
+          </div>
         </div>
         <button class="btn-block" onclick="signIn()">Entrar</button>
         <div class="auth-links">
           <a onclick="signUp()">Cadastrar</a>
-          <button class="icon-btn" onclick="signOut()" title="Sair"><i class="fi fi-rr-exit"></i></button>
+          <!-- <button class="icon-btn" onclick="signOut()" title="Sair"><i class="fi fi-rr-exit"></i></button> -->
         </div>
       </div>
     </div>
@@ -82,18 +91,54 @@
       <i class="fi fi-rr-exit"></i> Sair
     </button>
   </div>
-  </div>
-  </div>
 
   <!-- Doadores -->
   <div id="doador-section" class="section hidden">
     <h2>Doadores</h2>
-    <input type="text" id="doadorNome" placeholder="Nome">
-    <input type="text" id="doadorTelefone" placeholder="Telefone">
-    <input type="text" id="doadorCpf" placeholder="CPF/CNPJ">
-    <input type="text" id="doadorEndereco" placeholder="Endereço">
-    <input type="email" id="doadorEmail" placeholder="E-mail">
-    <button onclick="addDoador()">Adicionar</button>
+    <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalNovoDoador">
+      Novo Doador +
+    </button>
+
+    <!-- Modal: Novo Doador (Bootstrap 5) -->
+    <div class="modal fade" id="modalNovoDoador" tabindex="-1" aria-labelledby="modalNovoDoadorLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalNovoDoadorLabel">Novo Doador</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+          </div>
+          <div class="modal-body">
+            <form id="formNovoDoador">
+              <div class="mb-3">
+                <label for="doadorNome" class="form-label">Nome</label>
+                <input type="text" class="form-control" id="doadorNome" placeholder="Nome" required>
+              </div>
+              <div class="mb-3">
+                <label for="doadorTelefone" class="form-label">Telefone</label>
+                <input type="text" class="form-control" id="doadorTelefone" placeholder="Telefone">
+              </div>
+              <div class="mb-3">
+                <label for="doadorCpf" class="form-label">CPF/CNPJ</label>
+                <input type="text" class="form-control" id="doadorCpf" placeholder="CPF/CNPJ">
+              </div>
+              <div class="mb-3">
+                <label for="doadorEndereco" class="form-label">Endereço</label>
+                <input type="text" class="form-control" id="doadorEndereco" placeholder="Endereço">
+              </div>
+              <div class="mb-3">
+                <label for="doadorEmail" class="form-label">E-mail</label>
+                <input type="email" class="form-control" id="doadorEmail" placeholder="E-mail">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-success" onclick="addDoador()">Salvar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <table id="doadorTable">
       <thead>
         <tr>
@@ -111,11 +156,46 @@
   <!-- Doações -->
   <div id="doacao-section" class="section hidden">
     <h2>Doações</h2>
-    <input type="number" id="doacaoValor" placeholder="Valor">
-    <input type="date" id="doacaoData">
-    <input type="text" id="doacaoForma" placeholder="Forma de Pagamento">
-    <input type="text" id="idDoador" placeholder="Id do Doador">
-    <button onclick="addDoacao()">Adicionar</button>
+    <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalNovaDoacao">
+      Nova Doação +
+    </button>
+
+    <!-- Modal: Nova Doação (Bootstrap 5) -->
+    <div class="modal fade" id="modalNovaDoacao" tabindex="-1" aria-labelledby="modalNovaDoacaoLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalNovaDoacaoLabel">Nova Doação</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+          </div>
+          <div class="modal-body">
+            <form id="formNovaDoacao">
+              <div class="mb-3">
+                <label for="idDoador" class="form-label">Id do Doador</label>
+                <input type="text" class="form-control" id="idDoador" placeholder="Id do Doador" required>
+              </div>
+              <div class="mb-3">
+                <label for="doacaoValor" class="form-label">Valor</label>
+                <input type="number" class="form-control" id="doacaoValor" placeholder="Valor">
+              </div>
+              <div class="mb-3">
+                <label for="doacaoData" class="form-label">Data</label>
+                <input type="date" class="form-control" id="doacaoData">
+              </div>
+              <div class="mb-3">
+                <label for="doacaoForma" class="form-label">Forma de Pagamento</label>
+                <input type="text" class="form-control" id="doacaoForma" placeholder="Forma de Pagamento">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-success" onclick="addDoacao()">Salvar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <table id="doacaoTable">
       <thead>
         <tr>
@@ -134,10 +214,42 @@
   <!-- Interações -->
   <div id="interacao-section" class="section hidden">
     <h2>Interações</h2>
-    <input type="text" id="tipoInteracao" placeholder="Tipo">
-    <input type="text" id="idDoadorInteracao" placeholder="ID do Doador">
-    <input type="text" id="observacoes" placeholder="Observações">
-    <button onclick="addInteracaoNova()">Adicionar</button>
+    <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalNovaInteracao">
+      Nova Interação +
+    </button>
+
+    <!-- Modal: Nova Interação (Bootstrap 5) -->
+    <div class="modal fade" id="modalNovaInteracao" tabindex="-1" aria-labelledby="modalNovaInteracaoLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalNovaInteracaoLabel">Nova Interação</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+          </div>
+          <div class="modal-body">
+            <form id="formNovaInteracao">
+              <div class="mb-3">
+                <label for="idDoadorInteracao" class="form-label">ID do Doador</label>
+                <input type="text" class="form-control" id="idDoadorInteracao" placeholder="ID do Doador" required>
+              </div>
+              <div class="mb-3">
+                <label for="tipoInteracao" class="form-label">Tipo</label>
+                <input type="text" class="form-control" id="tipoInteracao" placeholder="Tipo">
+              </div>
+              <div class="mb-3">
+                <label for="observacoes" class="form-label">Observações</label>
+                <input type="text" class="form-control" id="observacoes" placeholder="Observações">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-success" onclick="addInteracaoNova()">Salvar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <table id="interacaoTable">
       <thead>
         <tr>
@@ -152,6 +264,9 @@
       <tbody></tbody>
     </table>
   </div>
+
+  <!-- Bootstrap 5 JS (Modal, etc.) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
     // 🔑 Config Supabase
@@ -242,6 +357,13 @@
       document.getElementById("interacao-section").classList.toggle("hidden", !show);
     }
 
+    // Fecha o modal do Bootstrap e limpa os campos do formulário
+    function fecharModal(modalId, formId) {
+      const modalEl = document.getElementById(modalId);
+      bootstrap.Modal.getOrCreateInstance(modalEl).hide();
+      document.getElementById(formId).reset();
+    }
+
     // =========================
     // 🧑 DOADOR NOVO
     // =========================
@@ -266,14 +388,18 @@
     }
 
     async function addDoador() {
-      const nome = document.getElementById("doadorNome").value;
+      const nome = document.getElementById("doadorNome").value.trim();
       const telefone = document.getElementById("doadorTelefone").value;
       const cpf = document.getElementById("doadorCpf").value;
       const endereco = document.getElementById("doadorEndereco").value;
       const email = document.getElementById("doadorEmail").value || ''; // opcional
 
+      if (!nome) return alert("Informe o nome do doador!");
+
       const { error } = await supabaseClient.from("doador_novo").insert({ nome, telefone, cpf_cnpj: cpf, endereco, email });
       if (error) return alert("Erro: " + error.message);
+
+      fecharModal("modalNovoDoador", "formNovoDoador");
       loadDoadores();
     }
 
@@ -334,6 +460,8 @@
       const forma = document.getElementById("doacaoForma").value;
       const idDoador = document.getElementById("idDoador").value;
 
+      if (!idDoador) return alert("Informe o Id do Doador!");
+
       // Verificar se o ID do doador existe na tabela doadores
       const { data: doador, error: doadorError } = await supabaseClient
         .from("doador_novo")
@@ -353,6 +481,8 @@
         forma_pagamento: forma
       });
       if (error) return alert("Erro: " + error.message);
+
+      fecharModal("modalNovaDoacao", "formNovaDoacao");
       loadDoacoes();
     }
 
@@ -412,6 +542,8 @@
       const obs = document.getElementById("observacoes").value;
       const idDoador = document.getElementById("idDoadorInteracao").value || '';
 
+      if (!idDoador) return alert("Informe o ID do Doador!");
+
       // Verificar se o ID do doador existe na tabela doadores
       const { data: doador, error: doadorError } = await supabaseClient
         .from("doador_novo")
@@ -442,6 +574,8 @@
         timerProgressBar: true,
         toast: true,
       })
+
+      fecharModal("modalNovaInteracao", "formNovaInteracao");
       loadInteracoes();
     }
 
@@ -476,6 +610,25 @@
       await loadInteracoes();
     }
 
+    function viewSenha() {
+      var tipo = document.getElementById("password")
+      var icon = document.getElementById("icon-password")
+
+
+      if (tipo.type == "password") {
+        tipo.type = "text";
+        icon.className = "fi fi-rr-eye";
+      } else {
+        tipo.type = "password";
+        icon.className = "fi fi-rr-eye-crossed";
+      }
+    }
+
+    function toggleSenhaBtn() {
+      var senha = document.getElementById("password");
+      var btn = document.getElementById("btn-toggle-senha");
+      btn.disabled = senha.value.length === 0;
+    }
 
 
   </script>

@@ -1,0 +1,11 @@
+{
+  "name": "sistema-mvp-ong-cru",
+  "private": true,
+  "scripts": {
+    "build:css": "sass scss/main.scss:style.css --no-source-map --style=expanded",
+    "watch:css": "sass --watch scss/main.scss:style.css --no-source-map --style=expanded"
+  },
+  "devDependencies": {
+    "sass": "^1.101.0"
+  }
+}

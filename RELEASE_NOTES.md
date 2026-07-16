@@ -2,6 +2,19 @@
 
 Histórico de mudanças do projeto, organizado por commit/entrega. Formato inspirado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
+## [Não lançado] — 2026-07-16 — Modais Bootstrap para criação + toggle de senha + tooling
+### Adicionado
+- Bootstrap 5 (CSS/JS via CDN) para os formulários de criação de Doadores, Doações e Interações: cada um virou um botão "Novo X +" que abre um modal, em vez de inputs soltos na tela.
+- Botão de mostrar/ocultar senha na tela de login, habilitado apenas quando o campo tem conteúdo digitado.
+- Estado de foco customizado nos inputs (substitui o outline nativo do navegador por uma borda/box-shadow na cor do sistema).
+- `package.json` com scripts `build:css`/`watch:css` e `sass` como dependência local, pra não depender mais de instalação global.
+- `.gitignore` para `node_modules/`.
+### Corrigido
+- Divergência de largura entre os campos de email e senha na tela de login (causada por margem legada conflitando com layout flex).
+- Lógica invertida do ícone de olho (mostrar/ocultar senha) que não mudava visualmente no primeiro clique.
+### Alterado
+- README: nova seção documentando o uso do Bootstrap, instruções de instalação atualizadas (build local do Sass via npm em vez de instalação global) e estrutura de pastas corrigida.
+
 ## [3ca2128] — 2026-07-16 — Redesenha tela de login e adiciona release notes
 ### Adicionado
 - Tela de Login/Cadastro redesenhada: card centralizado vertical e horizontalmente na tela, com círculo de logo acima do título.
