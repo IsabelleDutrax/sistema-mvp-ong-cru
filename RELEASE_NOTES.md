@@ -2,7 +2,7 @@
 
 Histórico de mudanças do projeto, organizado por commit/entrega. Formato inspirado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
-## [Não lançado] — 2026-07-16 — Dashboard com sidebar + refinamentos dos modais
+## [44d06d7] — 2026-07-16 — Dashboard com sidebar + refinamentos dos modais
 ### Adicionado
 - Página de Dashboard (dentro do próprio `index.html`) com sidebar fixa (Dashboard/Doadores/Doações/Interações/Sair) e 4 cards de estatística (total arrecadado, doadores, doações e interações), calculados a partir dos dados do Supabase.
 - Navegação por página única: só uma seção fica visível por vez, trocada ao clicar na sidebar (`showPage()`), substituindo a antiga barra "Logado como..." e as três seções empilhadas.
