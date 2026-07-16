@@ -2,7 +2,7 @@
 
 Histórico de mudanças do projeto, organizado por commit/entrega. Formato inspirado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
-## [Não lançado] — em andamento (working tree)
+## [3ca2128] — 2026-07-16 — Redesenha tela de login e adiciona release notes
 ### Adicionado
 - Tela de Login/Cadastro redesenhada: card centralizado vertical e horizontalmente na tela, com círculo de logo acima do título.
 - Barra compacta pós-login ("Logado como ...") que substitui o formulário de login enquanto o usuário está autenticado.
