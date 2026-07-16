@@ -2,7 +2,7 @@
 
 Histórico de mudanças do projeto, organizado por commit/entrega. Formato inspirado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
-## [Não lançado] — 2026-07-16 — Modais Bootstrap para criação + toggle de senha + tooling
+## [e9fee10] — 2026-07-16 — Modais Bootstrap para criação + toggle de senha + tooling
 ### Adicionado
 - Bootstrap 5 (CSS/JS via CDN) para os formulários de criação de Doadores, Doações e Interações: cada um virou um botão "Novo X +" que abre um modal, em vez de inputs soltos na tela.
 - Botão de mostrar/ocultar senha na tela de login, habilitado apenas quando o campo tem conteúdo digitado.
