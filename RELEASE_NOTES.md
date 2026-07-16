@@ -2,6 +2,18 @@
 
 Histórico de mudanças do projeto, organizado por commit/entrega. Formato inspirado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
+## [Não lançado] — 2026-07-16 — Dashboard com sidebar + refinamentos dos modais
+### Adicionado
+- Página de Dashboard (dentro do próprio `index.html`) com sidebar fixa (Dashboard/Doadores/Doações/Interações/Sair) e 4 cards de estatística (total arrecadado, doadores, doações e interações), calculados a partir dos dados do Supabase.
+- Navegação por página única: só uma seção fica visível por vez, trocada ao clicar na sidebar (`showPage()`), substituindo a antiga barra "Logado como..." e as três seções empilhadas.
+- Layout responsivo: sidebar vira barra horizontal em telas pequenas.
+### Alterado
+- Sidebar com altura fixa (100vh) e sem scroll próprio; só o conteúdo principal rola quando a página (ex: Interações) é mais comprida que a tela.
+- Botão "Cancelar" dos modais (Doador/Doação/Interação) movido para a ponta esquerda do rodapé e com estilo "ghost" (sem preenchimento/borda), no lugar do `btn-secondary` cinza.
+- Labels e inputs dentro dos modais com fonte reduzida (`0.875rem`), para não ficarem desproporcionais ao restante do formulário.
+### Removido
+- `.logged-in-bar` (barra compacta pós-login) e seu CSS, substituída pela sidebar.
+
 ## [e9fee10] — 2026-07-16 — Modais Bootstrap para criação + toggle de senha + tooling
 ### Adicionado
 - Bootstrap 5 (CSS/JS via CDN) para os formulários de criação de Doadores, Doações e Interações: cada um virou um botão "Novo X +" que abre um modal, em vez de inputs soltos na tela.

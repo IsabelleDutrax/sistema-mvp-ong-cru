@@ -102,51 +102,16 @@
     }
 }
 
-// Barra compacta exibida após o login
-.logged-in-bar {
-    display: flex;
-    align-items: center;
-    gap: $margin;
-    background-color: white;
-    border: 1px solid $border-color;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    padding: $padding / 1.5 $padding;
-    margin: $padding auto;
-    max-width: 700px;
-    box-sizing: border-box;
-
-    .logo-circle-sm {
-        width: 32px;
-        height: 32px;
-        font-size: 1rem;
-        margin-bottom: 0;
-        flex-shrink: 0;
-    }
-
-    .logged-in-text {
-        flex: 1;
-        font-size: 0.9rem;
-        color: #333;
-    }
-
-    .icon-btn {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        font-size: 0.9rem;
-        white-space: nowrap;
-    }
+// Versão compacta do círculo de logo, reutilizada na sidebar
+.logo-circle-sm {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+    margin-bottom: 0;
+    flex-shrink: 0;
 }
 
 @media (max-width: 480px) {
-    .logged-in-bar {
-        flex-wrap: wrap;
-        justify-content: center;
-        text-align: center;
-    }
-
-
     .logo-circle {
         width: 56px;
         height: 56px;

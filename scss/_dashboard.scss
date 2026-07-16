@@ -1,0 +1,213 @@
+// Layout do app logado: sidebar fixa + conteúdo
+// O shell ocupa exatamente a altura da viewport e não rola;
+// só o .main-content rola quando o conteúdo é maior que a tela.
+.app-shell {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.sidebar {
+    width: 240px;
+    flex-shrink: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-right: 1px solid $border-color;
+    padding: $padding * 1.5 0;
+    box-sizing: border-box;
+    overflow: hidden;
+
+    .sidebar-brand {
+        display: flex;
+        align-items: center;
+        gap: $margin;
+        padding: 0 $padding * 1.5;
+        margin-bottom: $padding * 1.5;
+
+        strong {
+            display: block;
+            color: #222;
+        }
+
+        small {
+            display: block;
+            color: #888;
+        }
+    }
+
+    .nav {
+        flex: 1;
+        padding: 0 $padding;
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #555;
+            border-radius: 6px;
+            padding: 10px 12px;
+            margin-bottom: 4px;
+            cursor: pointer;
+
+            i {
+                width: 18px;
+                text-align: center;
+            }
+
+            &:hover {
+                background-color: #f2f2f2;
+            }
+
+            &.active {
+                background-color: #212529;
+                color: white;
+            }
+        }
+    }
+
+    .sidebar-footer {
+        padding: $padding $padding * 1.5 0;
+        border-top: 1px solid $border-color;
+
+        .logged-in-text {
+            display: block;
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: $margin;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #555;
+            cursor: pointer;
+
+            &:hover {
+                color: $primary-color;
+            }
+        }
+    }
+}
+
+.main-content {
+    flex: 1;
+    min-height: 0; // permite o overflow-y funcionar dentro do flex container
+    padding: $padding * 2;
+    overflow-y: auto;
+    background-color: #f8f9fa;
+    box-sizing: border-box;
+}
+
+.app-page.hidden {
+    display: none;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $padding * 1.5;
+
+    h1 {
+        margin: 0;
+        font-size: 1.75rem;
+        text-align: left;
+    }
+
+    p {
+        margin: 4px 0 0;
+        color: #888;
+    }
+}
+
+// Cards de estatística do Dashboard
+.stat-card {
+    border: 1px solid $border-color;
+    border-radius: 8px;
+
+    .stat-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: #888;
+    }
+
+    .stat-value {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #222;
+    }
+
+    .stat-caption {
+        font-size: 0.8rem;
+        color: #888;
+    }
+
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.3rem;
+    }
+}
+
+// Sidebar vira uma barra horizontal em telas pequenas
+@media (max-width: 768px) {
+    .app-shell {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        flex-shrink: 0;
+        flex-direction: row;
+        align-items: center;
+        border-right: none;
+        border-bottom: 1px solid $border-color;
+        padding: $padding;
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        .sidebar-brand {
+            display: none;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: row;
+            padding: 0;
+
+            .nav-link {
+                white-space: nowrap;
+            }
+        }
+
+        .sidebar-footer {
+            border-top: none;
+            padding: 0;
+            margin-left: auto;
+            flex-shrink: 0;
+
+            .logged-in-text {
+                display: none;
+            }
+
+            .nav-link {
+                white-space: nowrap;
+            }
+        }
+    }
+
+    .main-content {
+        padding: $padding;
+    }
+}

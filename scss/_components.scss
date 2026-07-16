@@ -36,6 +36,18 @@ button.secondary {
     }
 }
 
+// Botão "ghost": sem preenchimento nem borda, só texto (usado no Cancelar dos modais)
+button.btn-ghost {
+    background-color: transparent;
+    border: 1px solid transparent;
+    color: #555;
+
+    &:hover {
+        background-color: #f2f2f2;
+        color: #333;
+    }
+}
+
 button.btn-icon {
     background: none;
     padding: 0;
@@ -72,8 +84,14 @@ input {
 // Modais do Bootstrap: zera a margem legada de "input, button" (definida no <style>
 // do index.html) para não conflitar com o espaçamento próprio dos componentes do Bootstrap
 .modal {
+    .form-label {
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
     .form-control {
         margin: 0;
+        font-size: 0.875rem;
     }
 
     .btn {

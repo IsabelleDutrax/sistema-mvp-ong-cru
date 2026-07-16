@@ -83,18 +83,92 @@
     </div>
   </div>
 
-  <!-- Barra compacta exibida após o login -->
-  <div id="logged-in-bar" class="logged-in-bar hidden">
-    <div class="logo-circle logo-circle-sm">💰</div>
-    <span class="logged-in-text">Logado como <strong id="userEmailDisplay"></strong></span>
-    <button class="icon-btn" onclick="signOut()" title="Sair">
-      <i class="fi fi-rr-exit"></i> Sair
-    </button>
-  </div>
+  <!-- App logado: sidebar fixa + conteúdo -->
+  <div id="app-shell" class="app-shell hidden">
+    <nav class="sidebar">
+      <div class="sidebar-brand">
+        <div class="logo-circle logo-circle-sm">💰</div>
+        <div>
+          <strong>MVP Doações</strong>
+          <small>Gestão de Doações</small>
+        </div>
+      </div>
+      <ul class="nav flex-column">
+        <li><a class="nav-link active" data-page="dashboard" onclick="showPage('dashboard')"><i class="fi fi-rr-dashboard"></i> Dashboard</a></li>
+        <li><a class="nav-link" data-page="doador" onclick="showPage('doador')"><i class="fi fi-rr-users"></i> Doadores</a></li>
+        <li><a class="nav-link" data-page="doacao" onclick="showPage('doacao')"><i class="fi fi-rr-gift"></i> Doações</a></li>
+        <li><a class="nav-link" data-page="interacao" onclick="showPage('interacao')"><i class="fi fi-rr-comment"></i> Interações</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <span class="logged-in-text">Logado como <strong id="userEmailDisplay"></strong></span>
+        <a class="nav-link" onclick="signOut()"><i class="fi fi-rr-exit"></i> Sair</a>
+      </div>
+    </nav>
 
-  <!-- Doadores -->
-  <div id="doador-section" class="section hidden">
-    <h2>Doadores</h2>
+    <main class="main-content">
+      <!-- Dashboard -->
+      <div id="dashboard-page" class="app-page">
+        <div class="dashboard-header">
+          <div>
+            <h1>Dashboard</h1>
+            <p>Visão geral das doações e doadores</p>
+          </div>
+        </div>
+        <div class="row g-3">
+          <div class="col-md-6 col-lg-3">
+            <div class="card stat-card">
+              <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="stat-label">Total Arrecadado</div>
+                  <div class="stat-value" id="statTotalArrecadado">R$ 0,00</div>
+                  <div class="stat-caption">soma das doações registradas</div>
+                </div>
+                <div class="stat-icon bg-success"><i class="fi fi-rr-chart-line-up"></i></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="card stat-card">
+              <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="stat-label">Doadores</div>
+                  <div class="stat-value" id="statDoadores">0</div>
+                  <div class="stat-caption">cadastrados</div>
+                </div>
+                <div class="stat-icon bg-primary"><i class="fi fi-rr-users"></i></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="card stat-card">
+              <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="stat-label">Doações</div>
+                  <div class="stat-value" id="statDoacoes">0</div>
+                  <div class="stat-caption">registradas</div>
+                </div>
+                <div class="stat-icon bg-warning"><i class="fi fi-rr-gift"></i></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="card stat-card">
+              <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="stat-label">Interações</div>
+                  <div class="stat-value" id="statInteracoes">0</div>
+                  <div class="stat-caption">registradas</div>
+                </div>
+                <div class="stat-icon bg-info"><i class="fi fi-rr-comment"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Doadores -->
+      <div id="doador-section" class="app-page section hidden">
+        <h2>Doadores</h2>
     <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalNovoDoador">
       Novo Doador +
     </button>
@@ -132,7 +206,7 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-ghost me-auto" data-bs-dismiss="modal">Cancelar</button>
             <button type="button" class="btn btn-success" onclick="addDoador()">Salvar</button>
           </div>
         </div>
@@ -154,7 +228,7 @@
   </div>
 
   <!-- Doações -->
-  <div id="doacao-section" class="section hidden">
+  <div id="doacao-section" class="app-page section hidden">
     <h2>Doações</h2>
     <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalNovaDoacao">
       Nova Doação +
@@ -189,7 +263,7 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-ghost me-auto" data-bs-dismiss="modal">Cancelar</button>
             <button type="button" class="btn btn-success" onclick="addDoacao()">Salvar</button>
           </div>
         </div>
@@ -212,7 +286,7 @@
   </div>
 
   <!-- Interações -->
-  <div id="interacao-section" class="section hidden">
+  <div id="interacao-section" class="app-page section hidden">
     <h2>Interações</h2>
     <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalNovaInteracao">
       Nova Interação +
@@ -243,7 +317,7 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-ghost me-auto" data-bs-dismiss="modal">Cancelar</button>
             <button type="button" class="btn btn-success" onclick="addInteracaoNova()">Salvar</button>
           </div>
         </div>
@@ -264,6 +338,8 @@
       <tbody></tbody>
     </table>
   </div>
+    </main>
+  </div>
 
   <!-- Bootstrap 5 JS (Modal, etc.) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -279,6 +355,11 @@
     let currentUser = null;
     let currentDoadorId = null;
     let isAdmin = false;
+
+    // Cache local dos últimos dados carregados, usado pelo Dashboard
+    let doadoresData = [];
+    let doacoesData = [];
+    let interacoesData = [];
 
     // =========================
     // 🔐 AUTH
@@ -348,13 +429,40 @@
 
     function toggleSections(show) {
       document.getElementById("login-container").classList.toggle("hidden", show);
-      document.getElementById("logged-in-bar").classList.toggle("hidden", !show);
+      document.getElementById("app-shell").classList.toggle("hidden", !show);
       if (show && currentUser) {
         document.getElementById("userEmailDisplay").textContent = currentUser.email;
+        showPage("dashboard");
       }
-      document.getElementById("doador-section").classList.toggle("hidden", !show);
-      document.getElementById("doacao-section").classList.toggle("hidden", !show);
-      document.getElementById("interacao-section").classList.toggle("hidden", !show);
+    }
+
+    // Páginas do app logado (sidebar) e a página atualmente visível
+    const PAGES = {
+      dashboard: "dashboard-page",
+      doador: "doador-section",
+      doacao: "doacao-section",
+      interacao: "interacao-section",
+    };
+
+    function showPage(page) {
+      Object.values(PAGES).forEach(id => document.getElementById(id).classList.add("hidden"));
+      document.getElementById(PAGES[page]).classList.remove("hidden");
+
+      document.querySelectorAll(".sidebar .nav-link[data-page]").forEach(el => el.classList.remove("active"));
+      const activeLink = document.querySelector(`.sidebar .nav-link[data-page="${page}"]`);
+      if (activeLink) activeLink.classList.add("active");
+
+      if (page === "dashboard") renderDashboard();
+    }
+
+    // Calcula e exibe os números do dashboard a partir dos dados já carregados
+    function renderDashboard() {
+      const totalArrecadado = doacoesData.reduce((soma, d) => soma + (Number(d.valor) || 0), 0);
+      document.getElementById("statTotalArrecadado").textContent =
+        totalArrecadado.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+      document.getElementById("statDoadores").textContent = doadoresData.length;
+      document.getElementById("statDoacoes").textContent = doacoesData.length;
+      document.getElementById("statInteracoes").textContent = interacoesData.length;
     }
 
     // Fecha o modal do Bootstrap e limpa os campos do formulário
@@ -370,6 +478,8 @@
     async function loadDoadores() {
       const { data, error } = await supabaseClient.from("doador_novo").select("*");
       if (error) return console.error(error);
+
+      doadoresData = data;
 
       const tbody = document.querySelector("#doadorTable tbody");
       tbody.innerHTML = "";
@@ -436,6 +546,8 @@
     async function loadDoacoes() {
       const { data, error } = await supabaseClient.from("doacao_nova").select("*");
       if (error) return console.error(error);
+
+      doacoesData = data;
 
       const tbody = document.querySelector("#doacaoTable tbody");
       tbody.innerHTML = "";
@@ -519,6 +631,8 @@
 
       const { data, error } = await query;
       if (error) return console.error(error);
+
+      interacoesData = data;
 
       const tbody = document.querySelector("#interacaoTable tbody");
       tbody.innerHTML = "";
@@ -608,6 +722,7 @@
       await loadDoadores();
       await loadDoacoes();
       await loadInteracoes();
+      renderDashboard();
     }
 
     function viewSenha() {
