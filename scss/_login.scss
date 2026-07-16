@@ -1,0 +1,144 @@
+// Tela de login centralizada
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: $padding;
+    box-sizing: border-box;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.logo-circle {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: $primary-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin-bottom: $margin;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.login-container h1 {
+    margin: 0 0 $margin * 2 0;
+    text-align: center;
+}
+
+.auth-section {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-group {
+    margin-bottom: $margin;
+
+    input {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+.btn-block {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.auth-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $margin;
+    margin-top: $margin;
+
+    a {
+        color: $primary-color;
+        text-decoration: underline;
+        cursor: pointer;
+        font-size: 0.95rem;
+    }
+}
+
+.icon-btn {
+    background: transparent;
+    color: #999;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+
+    &:hover {
+        color: $primary-color;
+    }
+}
+
+// Barra compacta exibida após o login
+.logged-in-bar {
+    display: flex;
+    align-items: center;
+    gap: $margin;
+    background-color: white;
+    border: 1px solid $border-color;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: $padding / 1.5 $padding;
+    margin: $padding auto;
+    max-width: 700px;
+    box-sizing: border-box;
+
+    .logo-circle-sm {
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+        margin-bottom: 0;
+        flex-shrink: 0;
+    }
+
+    .logged-in-text {
+        flex: 1;
+        font-size: 0.9rem;
+        color: #333;
+    }
+
+    .icon-btn {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .logged-in-bar {
+        flex-wrap: wrap;
+        justify-content: center;
+        text-align: center;
+    }
+
+
+    .logo-circle {
+        width: 56px;
+        height: 56px;
+        font-size: 1.5rem;
+    }
+
+    .login-container h1 {
+        font-size: 1.4rem;
+        padding: 0 10px;
+    }
+
+    .login-card {
+        max-width: 100%;
+    }
+}
